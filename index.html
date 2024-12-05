@@ -4,76 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generátor faktury</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="date"], input[type="email"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .invoice-preview {
+            margin-top: 30px;
+            border-top: 2px solid #4CAF50;
+            padding-top: 20px;
+        }
+        .invoice-preview h2 {
+            color: #4CAF50;
+            font-size: 24px;
+        }
+        .invoice-detail {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .invoice-detail strong {
+            font-weight: bold;
+        }
+        .qr-code {
+            margin-top: 20px;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
+<div class="container">
     <h1>Generátor faktury</h1>
 
     <form id="invoiceForm">
-        <label for="companyName">Název společnosti:</label><br>
-        <input type="text" id="companyName" name="companyName"><br><br>
+        <div class="form-group">
+            <label for="companyName">Název společnosti:</label>
+            <input type="text" id="companyName" name="companyName" required>
+        </div>
 
-        <label for="ico">IČO:</label><br>
-        <input type="text" id="ico" name="ico"><br><br>
+        <div class="form-group">
+            <label for="ico">IČO:</label>
+            <input type="text" id="ico" name="ico" required>
+        </div>
 
-        <label for="item">Název položky:</label><br>
-        <input type="text" id="item" name="item"><br><br>
+        <div class="form-group">
+            <label for="address">Adresa společnosti:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
 
-        <label for="amount">Částka (CZK):</label><br>
-        <input type="number" id="amount" name="amount"><br><br>
+        <div class="form-group">
+            <label for="item">Název položky:</label>
+            <input type="text" id="item" name="item" required>
+        </div>
 
-        <label for="date">Datum:</label><br>
-        <input type="date" id="date" name="date"><br><br>
+        <div class="form-group">
+            <label for="amount">Částka (CZK):</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
 
-        <button type="button" onclick="generateInvoice()">Vytvořit fakturu</button>
+        <div class="form-group">
+            <label for="payment">Způsob platby:</label>
+            <input type="text" id="payment" name="payment" required>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Datum vystavení:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn" onclick="generateInvoice()">Vytvořit fakturu</button>
+        </div>
     </form>
 
-    <hr>
-
-    <h2>Faktura</h2>
-    <div id="invoicePreview">
-        <!-- Zde se bude generovat náhled faktury -->
+    <div class="invoice-preview" id="invoicePreview">
+        <!-- Náhled faktury -->
     </div>
+</div>
 
-    <script>
-        function generateInvoice() {
-            const { jsPDF } = window.jspdf;
+<script>
+    function generateInvoice() {
+        const { jsPDF } = window.jspdf;
 
-            // Načítání údajů z formuláře
-            const companyName = document.getElementById("companyName").value;
-            const ico = document.getElementById("ico").value;
-            const item = document.getElementById("item").value;
-            const amount = document.getElementById("amount").value;
-            const date = document.getElementById("date").value;
+        const companyName = document.getElementById("companyName").value;
+        const ico = document.getElementById("ico").value;
+        const address = document.getElementById("address").value;
+        const item = document.getElementById("item").value;
+        const amount = document.getElementById("amount").value;
+        const payment = document.getElementById("payment").value;
+        const date = document.getElementById("date").value;
 
-            // Generování náhledové faktury
-            const invoicePreview = document.getElementById("invoicePreview");
-            invoicePreview.innerHTML = `
-                <strong>Faktura</strong><br>
+        const invoicePreview = document.getElementById("invoicePreview");
+        invoicePreview.innerHTML = `
+            <h2>Faktura</h2>
+            <div class="invoice-detail">
                 <strong>Společnost:</strong> ${companyName} (${ico})<br>
-                <strong>Datum:</strong> ${date}<br><br>
+                <strong>Adresa:</strong> ${address}<br>
+                <strong>Datum vystavení:</strong> ${date}<br><br>
                 <strong>Položka:</strong> ${item}<br>
-                <strong>Částka:</strong> ${amount} CZK<br><br>
-                <button onclick="downloadPDF('${companyName}', '${ico}', '${item}', '${amount}', '${date}')">Stáhnout fakturu jako PDF</button>
-            `;
-        }
+                <strong>Částka:</strong> ${amount} CZK<br>
+                <strong>Způsob platby:</strong> ${payment}<br><br>
+                <button class="btn" onclick="downloadPDF('${companyName}', '${ico}', '${address}', '${item}', '${amount}', '${payment}', '${date}')">Stáhnout fakturu jako PDF</button>
+            </div>
+        `;
+    }
 
-        function downloadPDF(companyName, ico, item, amount, date) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+    function downloadPDF(companyName, ico, address, item, amount, payment, date) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-            // Přidání obsahu do PDF
-            doc.text('Faktura', 20, 20);
-            doc.text(`Společnost: ${companyName} (${ico})`, 20, 30);
-            doc.text(`Datum: ${date}`, 20, 40);
-            doc.text(`Položka: ${item}`, 20, 50);
-            doc.text(`Částka: ${amount} CZK`, 20, 60);
+        doc.text('Faktura', 20, 20);
+        doc.text(`Společnost: ${companyName} (${ico})`, 20, 30);
+        doc.text(`Adresa: ${address}`, 20, 40);
+        doc.text(`Datum vystavení: ${date}`, 20, 50);
+        doc.text(`Položka: ${item}`, 20, 60);
+        doc.text(`Částka: ${amount} CZK`, 20, 70);
+        doc.text(`Způsob platby: ${payment}`, 20, 80);
 
-            // Uložení PDF souboru
+        const qrCode = new QRCodeStyling({
+            width: 150,
+            height: 150,
+            data: `https://www.example.com/faktura/${companyName}`,
+        });
+
+        qrCode.getDataUrl().then((url) => {
+            doc.addImage(url, 'PNG', 150, 50, 50, 50);
             doc.save(`faktura-${companyName}.pdf`);
-        }
-    </script>
+        });
+    }
+</script>
 
 </body>
 </html>
