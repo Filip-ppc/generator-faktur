@@ -102,91 +102,91 @@
     <form id="invoiceForm">
         <div class="form-group">
             <label for="companyName">Název dodavatele:</label>
-            <input type="text" id="companyName" name="companyName" required>
+            <input type="text" id="companyName" name="companyName" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="companyAddress">Adresa dodavatele:</label>
-            <textarea id="companyAddress" name="companyAddress" rows="3" required></textarea>
+            <textarea id="companyAddress" name="companyAddress" rows="3" oninput="updateInvoicePreview()" required></textarea>
         </div>
 
         <div class="form-group">
             <label for="ico">IČO dodavatele:</label>
-            <input type="text" id="ico" name="ico" required>
+            <input type="text" id="ico" name="ico" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="buyerName">Název odběratele:</label>
-            <input type="text" id="buyerName" name="buyerName" required>
+            <input type="text" id="buyerName" name="buyerName" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="buyerAddress">Adresa odběratele:</label>
-            <textarea id="buyerAddress" name="buyerAddress" rows="3" required></textarea>
+            <textarea id="buyerAddress" name="buyerAddress" rows="3" oninput="updateInvoicePreview()" required></textarea>
         </div>
 
         <div class="form-group">
             <label for="buyerIco">IČO odběratele:</label>
-            <input type="text" id="buyerIco" name="buyerIco" required>
+            <input type="text" id="buyerIco" name="buyerIco" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="invoiceNumber">Číslo faktury:</label>
-            <input type="text" id="invoiceNumber" name="invoiceNumber" required>
+            <input type="text" id="invoiceNumber" name="invoiceNumber" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="email">Email kontaktní osoby:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="phone">Telefonní číslo:</label>
-            <input type="text" id="phone" name="phone" required>
+            <input type="text" id="phone" name="phone" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="issueDate">Datum vystavení:</label>
-            <input type="date" id="issueDate" name="issueDate" required>
+            <input type="date" id="issueDate" name="issueDate" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="dueDate">Datum splatnosti:</label>
-            <input type="date" id="dueDate" name="dueDate" required>
+            <input type="date" id="dueDate" name="dueDate" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="bankAccount">Číslo účtu:</label>
-            <input type="text" id="bankAccount" name="bankAccount" required>
+            <input type="text" id="bankAccount" name="bankAccount" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="iban">IBAN:</label>
-            <input type="text" id="iban" name="iban" required>
+            <input type="text" id="iban" name="iban" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="variableSymbol">Variabilní symbol:</label>
-            <input type="text" id="variableSymbol" name="variableSymbol" required>
+            <input type="text" id="variableSymbol" name="variableSymbol" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="constantSymbol">Konstantní symbol:</label>
-            <input type="text" id="constantSymbol" name="constantSymbol" required>
+            <input type="text" id="constantSymbol" name="constantSymbol" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="amount">Částka k úhradě:</label>
-            <input type="number" id="amount" name="amount" required>
+            <input type="number" id="amount" name="amount" oninput="updateInvoicePreview()" required>
         </div>
 
         <div class="form-group">
             <label for="description">Fakturujeme vám za dodané služby:</label>
-            <textarea id="description" name="description" rows="3" required></textarea>
+            <textarea id="description" name="description" rows="3" oninput="updateInvoicePreview()" required></textarea>
         </div>
 
         <div class="form-actions">
-            <button type="button" class="btn" onclick="generateInvoice()">Vytvořit fakturu</button>
+            <button type="button" class="btn" onclick="generateInvoice()">Stáhnout PDF</button>
         </div>
     </form>
 
@@ -196,9 +196,7 @@
 </div>
 
 <script>
-    function generateInvoice() {
-        const { jsPDF } = window.jspdf;
-
+    function updateInvoicePreview() {
         const companyName = document.getElementById("companyName").value;
         const companyAddress = document.getElementById("companyAddress").value;
         const ico = document.getElementById("ico").value;
@@ -217,8 +215,7 @@
         const amount = document.getElementById("amount").value;
         const description = document.getElementById("description").value;
 
-        const invoicePreview = document.getElementById("invoicePreview");
-        invoicePreview.innerHTML = `
+        const invoicePreviewHTML = `
             <div class="invoice-header">
                 <h2>Faktura č. ${invoiceNumber}</h2>
                 <p>Datum vystavení: ${issueDate}</p>
@@ -236,25 +233,51 @@
                 <p>Faktura vystavena elektronicky.</p>
             </div>
         `;
+        document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
+    }
 
-        // Generování PDF
+    function generateInvoice() {
+        const companyName = document.getElementById("companyName").value;
+        const companyAddress = document.getElementById("companyAddress").value;
+        const ico = document.getElementById("ico").value;
+        const buyerName = document.getElementById("buyerName").value;
+        const buyerAddress = document.getElementById("buyerAddress").value;
+        const buyerIco = document.getElementById("buyerIco").value;
+        const invoiceNumber = document.getElementById("invoiceNumber").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const issueDate = document.getElementById("issueDate").value;
+        const dueDate = document.getElementById("dueDate").value;
+        const bankAccount = document.getElementById("bankAccount").value;
+        const iban = document.getElementById("iban").value;
+        const variableSymbol = document.getElementById("variableSymbol").value;
+        const constantSymbol = document.getElementById("constantSymbol").value;
+        const amount = document.getElementById("amount").value;
+        const description = document.getElementById("description").value;
+
+        const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         doc.setFont("Arial", "normal", 12);
+
+        // Přidání všech údajů do PDF s formátováním
         doc.text(`Faktura č. ${invoiceNumber}`, 20, 20);
         doc.text(`Datum vystavení: ${issueDate}`, 20, 30);
         doc.text(`Datum splatnosti: ${dueDate}`, 20, 40);
         doc.text(`Dodavatel: ${companyName}`, 20, 50);
-        doc.text(`Odběratel: ${buyerName}`, 20, 60);
-        doc.text(`Celkem k úhradě: ${amount} Kč`, 20, 70);
-        doc.text(`Fakturujeme za: ${description}`, 20, 80);
-        doc.text(`IČO dodavatele: ${ico}`, 20, 90);
-        doc.text(`IČO odběratele: ${buyerIco}`, 20, 100);
-        doc.text(`Telefon: ${phone}`, 20, 110);
-        doc.text(`Email: ${email}`, 20, 120);
+        doc.text(`Adresa: ${companyAddress}`, 20, 60);
+        doc.text(`IČO: ${ico}`, 20, 70);
+        doc.text(`Odběratel: ${buyerName}`, 20, 80);
+        doc.text(`Adresa: ${buyerAddress}`, 20, 90);
+        doc.text(`IČO: ${buyerIco}`, 20, 100);
+        doc.text(`Email: ${email}`, 20, 110);
+        doc.text(`Telefon: ${phone}`, 20, 120);
         doc.text(`Číslo účtu: ${bankAccount}`, 20, 130);
         doc.text(`IBAN: ${iban}`, 20, 140);
         doc.text(`Variabilní symbol: ${variableSymbol}`, 20, 150);
         doc.text(`Konstantní symbol: ${constantSymbol}`, 20, 160);
+        doc.text(`Fakturujeme za: ${description}`, 20, 170);
+        doc.text(`Celkem k úhradě: ${amount} Kč`, 20, 180);
+
         doc.save(`faktura_${invoiceNumber}.pdf`);
     }
 </script>
