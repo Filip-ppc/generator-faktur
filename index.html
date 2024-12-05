@@ -22,7 +22,7 @@
         }
         h1 {
             text-align: center;
-            color: #4CAF50;
+            color: #0277BD;
         }
         .form-group {
             margin-bottom: 20px;
@@ -42,7 +42,7 @@
             text-align: center;
         }
         .btn {
-            background-color: #4CAF50;
+            background-color: #0277BD;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -52,11 +52,11 @@
         }
         .invoice-preview {
             margin-top: 30px;
-            border-top: 2px solid #4CAF50;
+            border-top: 2px solid #0277BD;
             padding-top: 20px;
         }
         .invoice-preview h2 {
-            color: #4CAF50;
+            color: #0277BD;
             font-size: 24px;
         }
         .invoice-detail {
@@ -93,7 +93,6 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -222,48 +221,23 @@
         invoicePreview.innerHTML = `
             <div class="invoice-header">
                 <h2>Faktura č. ${invoiceNumber}</h2>
-                <p>${issueDate} - ${dueDate}</p>
+                <p>Datum vystavení: ${issueDate}</p>
+                <p>Datum splatnosti: ${dueDate}</p>
             </div>
             <div class="invoice-body">
-                <div class="invoice-detail">
-                    <strong>Dodavatel:</strong><br>
-                    ${companyName}<br>
-                    ${companyAddress}<br>
-                    IČO: ${ico}
-                </div>
-                <div class="invoice-detail">
-                    <strong>Odběratel:</strong><br>
-                    ${buyerName}<br>
-                    ${buyerAddress}<br>
-                    IČO: ${buyerIco}
-                </div>
-                <div class="invoice-detail">
-                    <strong>Kontaktní údaje:</strong><br>
-                    Email: ${email}<br>
-                    Telefon: ${phone}
-                </div>
-                <div class="invoice-detail">
-                    <strong>Bankovní údaje:</strong><br>
-                    Číslo účtu: ${bankAccount}<br>
-                    IBAN: ${iban}<br>
-                    Variabilní symbol: ${variableSymbol}<br>
-                    Konstantní symbol: ${constantSymbol}
-                </div>
-                <div class="invoice-detail">
-                    <strong>Fakturujeme vám za dodané služby:</strong><br>
-                    ${description}
-                </div>
-                <div class="invoice-detail">
-                    <strong>Celkem k úhradě:</strong><br>
-                    ${amount} Kč
-                </div>
+                <div class="invoice-detail"><strong>Dodavatel:</strong><br>${companyName}<br>${companyAddress}<br>IČO: ${ico}</div>
+                <div class="invoice-detail"><strong>Odběratel:</strong><br>${buyerName}<br>${buyerAddress}<br>IČO: ${buyerIco}</div>
+                <div class="invoice-detail"><strong>Kontaktní údaje:</strong><br>Email: ${email}<br>Telefon: ${phone}</div>
+                <div class="invoice-detail"><strong>Bankovní údaje:</strong><br>Číslo účtu: ${bankAccount}<br>IBAN: ${iban}<br>Variabilní symbol: ${variableSymbol}<br>Konstantní symbol: ${constantSymbol}</div>
+                <div class="invoice-detail"><strong>Fakturujeme vám za dodané služby:</strong><br>${description}</div>
+                <div class="invoice-detail"><strong>Celkem k úhradě:</strong><br>${amount} Kč</div>
             </div>
             <div class="invoice-footer">
                 <p>Faktura vystavena elektronicky.</p>
             </div>
         `;
 
-        // Vytvoření PDF faktury
+        // Generování PDF
         const doc = new jsPDF();
         doc.setFont("Arial", "normal", 12);
         doc.text(`Faktura č. ${invoiceNumber}`, 20, 20);
@@ -272,6 +246,15 @@
         doc.text(`Dodavatel: ${companyName}`, 20, 50);
         doc.text(`Odběratel: ${buyerName}`, 20, 60);
         doc.text(`Celkem k úhradě: ${amount} Kč`, 20, 70);
+        doc.text(`Fakturujeme za: ${description}`, 20, 80);
+        doc.text(`IČO dodavatele: ${ico}`, 20, 90);
+        doc.text(`IČO odběratele: ${buyerIco}`, 20, 100);
+        doc.text(`Telefon: ${phone}`, 20, 110);
+        doc.text(`Email: ${email}`, 20, 120);
+        doc.text(`Číslo účtu: ${bankAccount}`, 20, 130);
+        doc.text(`IBAN: ${iban}`, 20, 140);
+        doc.text(`Variabilní symbol: ${variableSymbol}`, 20, 150);
+        doc.text(`Konstantní symbol: ${constantSymbol}`, 20, 160);
         doc.save(`faktura_${invoiceNumber}.pdf`);
     }
 </script>
