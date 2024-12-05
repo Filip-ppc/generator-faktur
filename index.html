@@ -1,115 +1,14 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generování Faktury do PDF</title>
-
-    <!-- Přidání knihovny html2pdf.js přes CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+    <title>Dynamická faktura</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- Formulář pro zadání údajů -->
-<form id="invoiceForm">
-    <input type="text" id="invoiceNumber" placeholder="Faktura č." required>
-    <input type="date" id="issueDate" placeholder="Datum vystavení" required>
-    <input type="date" id="dueDate" placeholder="Datum splatnosti" required>
-    <input type="text" id="companyName" placeholder="Dodavatel" required>
-    <input type="text" id="companyAddress" placeholder="Adresa dodavatele" required>
-    <input type="text" id="ico" placeholder="IČO dodavatele" required>
-    <input type="text" id="buyerName" placeholder="Odběratel" required>
-    <input type="text" id="buyerAddress" placeholder="Adresa odběratele" required>
-    <input type="text" id="buyerIco" placeholder="IČO odběratele" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="tel" id="phone" placeholder="Telefon" required>
-    <input type="text" id="bankAccount" placeholder="Číslo účtu" required>
-    <input type="text" id="iban" placeholder="IBAN" required>
-    <input type="text" id="variableSymbol" placeholder="Variabilní symbol" required>
-    <input type="text" id="constantSymbol" placeholder="Konstantní symbol" required>
-    <input type="text" id="description" placeholder="Fakturujeme za" required>
-    <input type="number" id="amount" placeholder="Celkem k úhradě" required>
-    <button type="button" onclick="generatePDF()">Generovat PDF</button>
-</form>
-
-<!-- Tohle bude obsah, který se převede do PDF -->
-<div id="invoiceContent" style="display:none;">
-    <h2>Faktura</h2>
-    <p id="invoiceNumberText"></p>
-    <p id="issueDateText"></p>
-    <p id="dueDateText"></p>
-    <p id="companyNameText"></p>
-    <p id="companyAddressText"></p>
-    <p id="icoText"></p>
-    <p id="buyerNameText"></p>
-    <p id="buyerAddressText"></p>
-    <p id="buyerIcoText"></p>
-    <p id="emailText"></p>
-    <p id="phoneText"></p>
-    <p id="bankAccountText"></p>
-    <p id="ibanText"></p>
-    <p id="variableSymbolText"></p>
-    <p id="constantSymbolText"></p>
-    <p id="descriptionText"></p>
-    <p id="amountText"></p>
-</div>
-
-<script>
-    // Funkce pro generování PDF
-    function generatePDF() {
-        // Získání hodnot z formuláře
-        const invoiceNumber = document.getElementById('invoiceNumber').value;
-        const issueDate = document.getElementById('issueDate').value;
-        const dueDate = document.getElementById('dueDate').value;
-        const companyName = document.getElementById('companyName').value;
-        const companyAddress = document.getElementById('companyAddress').value;
-        const ico = document.getElementById('ico').value;
-        const buyerName = document.getElementById('buyerName').value;
-        const buyerAddress = document.getElementById('buyerAddress').value;
-        const buyerIco = document.getElementById('buyerIco').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const bankAccount = document.getElementById('bankAccount').value;
-        const iban = document.getElementById('iban').value;
-        const variableSymbol = document.getElementById('variableSymbol').value;
-        const constantSymbol = document.getElementById('constantSymbol').value;
-        const description = document.getElementById('description').value;
-        const amount = document.getElementById('amount').value;
-
-        // Vložení údajů do HTML
-        document.getElementById('invoiceNumberText').textContent = `Faktura č. ${invoiceNumber}`;
-        document.getElementById('issueDateText').textContent = `Datum vystavení: ${issueDate}`;
-        document.getElementById('dueDateText').textContent = `Datum splatnosti: ${dueDate}`;
-        document.getElementById('companyNameText').textContent = `Dodavatel: ${companyName}`;
-        document.getElementById('companyAddressText').textContent = `Adresa: ${companyAddress}`;
-        document.getElementById('icoText').textContent = `IČO: ${ico}`;
-        document.getElementById('buyerNameText').textContent = `Odběratel: ${buyerName}`;
-        document.getElementById('buyerAddressText').textContent = `Adresa: ${buyerAddress}`;
-        document.getElementById('buyerIcoText').textContent = `IČO: ${buyerIco}`;
-        document.getElementById('emailText').textContent = `Email: ${email}`;
-        document.getElementById('phoneText').textContent = `Telefon: ${phone}`;
-        document.getElementById('bankAccountText').textContent = `Číslo účtu: ${bankAccount}`;
-        document.getElementById('ibanText').textContent = `IBAN: ${iban}`;
-        document.getElementById('variableSymbolText').textContent = `Variabilní symbol: ${variableSymbol}`;
-        document.getElementById('constantSymbolText').textContent = `Konstantní symbol: ${constantSymbol}`;
-        document.getElementById('descriptionText').textContent = `Fakturujeme za: ${description}`;
-        document.getElementById('amountText').textContent = `Celkem k úhradě: ${amount} Kč`;
-
-        // Vytvoření PDF z HTML
-        const invoiceElement = document.getElementById('invoiceContent');
-        
-        // Nastavení možností pro generování PDF
-        const options = {
-            margin:       10,
-            filename:     `faktura-${invoiceNumber}.pdf`,
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // Generování a stažení PDF
-        html2pdf().from(invoiceElement).set(options).save();
-    }
-</script>
-
+    <h1>Vytvořit fakturu</h1>
+    <form id="fakturaForm">
+        </form>
+    <div id="faktura"></div>
+    <script src="script.js"></script>
 </body>
 </html>
