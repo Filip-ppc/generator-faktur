@@ -249,7 +249,7 @@
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFont("Arial", "normal", 12);
+        doc.setFont("Arial", "normal text", 12);
 
         // Přidání všech údajů do PDF s formátováním
         doc.text(`Faktura č. ${invoiceNumber}`, 20, 20);
