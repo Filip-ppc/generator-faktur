@@ -227,77 +227,77 @@
         `;
         document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
     }
-    
+
     function generateInvoice() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-    // Use a Unicode-compatible font
-    doc.addFont("Arial", "Arial", "normal");
-    doc.setFont("Arial", "normal");
+        // Use a Unicode-compatible font
+        doc.addFont("Arial", "Arial", "normal");
+        doc.setFont("Arial", "normal");
 
-    // Set text encoding to UTF-8
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
+        // Set text encoding to UTF-8
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
 
-    // Invoice Header
-    doc.setFontSize(16);
-    doc.text('Faktura', 105, 20, { align: 'center' });
-    doc.setFontSize(10);
+        // Invoice Header
+        doc.setFontSize(16);
+        doc.text('Faktura', 105, 20, { align: 'center' });
+        doc.setFontSize(10);
 
-    // Dodavatel (Supplier) Details
-    doc.text('Dodavatel', 20, 40);
-    doc.setFontSize(9);
-    doc.text(document.getElementById("companyName").value, 20, 45);
-    doc.text(document.getElementById("companyAddress").value, 20, 50);
-    doc.text(`IČ: ${document.getElementById("ico").value}`, 20, 60);
-    doc.text('Nejsme plátci DPH', 20, 65);
+        // Dodavatel (Supplier) Details
+        doc.text('Dodavatel', 20, 40);
+        doc.setFontSize(9);
+        doc.text(document.getElementById("companyName").value, 20, 45);
+        doc.text(document.getElementById("companyAddress").value, 20, 50);
+        doc.text(`IČ: ${document.getElementById("ico").value}`, 20, 60);
+        doc.text('Nejsme plátci DPH', 20, 65);
 
-    // Invoice Details
-    doc.setFontSize(10);
-    doc.text(`Číslo faktury: ${document.getElementById("invoiceNumber").value}`, 140, 40);
-    doc.text(`Datum vystavení: ${document.getElementById("issueDate").value}`, 140, 45);
+        // Invoice Details
+        doc.setFontSize(10);
+        doc.text(`Číslo faktury: ${document.getElementById("invoiceNumber").value}`, 140, 40);
+        doc.text(`Datum vystavení: ${document.getElementById("issueDate").value}`, 140, 45);
 
-    // Odběratel (Buyer) Details
-    doc.text('Odběratel', 20, 80);
-    doc.setFontSize(9);
-    doc.text(document.getElementById("buyerName").value, 20, 85);
-    doc.text(document.getElementById("buyerAddress").value, 20, 90);
-    doc.text(`IČ: ${document.getElementById("buyerIco").value}`, 20, 95);
+        // Odběratel (Buyer) Details
+        doc.text('Odběratel', 20, 80);
+        doc.setFontSize(9);
+        doc.text(document.getElementById("buyerName").value, 20, 85);
+        doc.text(document.getElementById("buyerAddress").value, 20, 90);
+        doc.text(`IČ: ${document.getElementById("buyerIco").value}`, 20, 95);
 
-    // Kontaktní údaje (Contact Details)
-    doc.text('Kontaktní údaje', 20, 110);
-    doc.text(`E-mail: ${document.getElementById("email").value}`, 20, 115);
-    doc.text(`Telefon: ${document.getElementById("phone").value}`, 20, 120);
+        // Kontaktní údaje (Contact Details)
+        doc.text('Kontaktní údaje', 20, 110);
+        doc.text(`E-mail: ${document.getElementById("email").value}`, 20, 115);
+        doc.text(`Telefon: ${document.getElementById("phone").value}`, 20, 120);
 
-    // Invoice Items
-    doc.text('Fakturujeme Vám za dodané zboží či služby:', 20, 135);
-    doc.text(document.getElementById("description").value, 20, 140);
+        // Invoice Items
+        doc.text('Fakturujeme Vám za dodané zboží či služby:', 20, 135);
+        doc.text(document.getElementById("description").value, 20, 140);
 
-    // Payment Details
-    doc.text(`Datum splatnosti: ${document.getElementById("dueDate").value}`, 20, 160);
-    doc.text(`Variabilní symbol: ${document.getElementById("variableSymbol").value}`, 20, 165);
-    doc.text(`Konstantní symbol: ${document.getElementById("constantSymbol").value}`, 20, 170);
+        // Payment Details
+        doc.text(`Datum splatnosti: ${document.getElementById("dueDate").value}`, 20, 160);
+        doc.text(`Variabilní symbol: ${document.getElementById("variableSymbol").value}`, 20, 165);
+        doc.text(`Konstantní symbol: ${document.getElementById("constantSymbol").value}`, 20, 170);
 
-    // Bank Details
-    doc.text('Bankovní účet', 20, 185);
-    doc.text(`Číslo účtu: ${document.getElementById("bankAccount").value}`, 20, 190);
-    doc.text(`IBAN: ${document.getElementById("iban").value}`, 20, 195);
+        // Bank Details
+        doc.text('Bankovní účet', 20, 185);
+        doc.text(`Číslo účtu: ${document.getElementById("bankAccount").value}`, 20, 190);
+        doc.text(`IBAN: ${document.getElementById("iban").value}`, 20, 195);
 
-    // Total Amount
-    doc.setFontSize(12);
-    doc.text(`Celkem k úhradě: ${document.getElementById("amount").value} Kč`, 20, 210);
+        // Total Amount
+        doc.setFontSize(12);
+        doc.text(`Celkem k úhradě: ${document.getElementById("amount").value} Kč`, 20, 210);
 
-    // Footer
-    doc.setFontSize(8);
-    doc.text('Dovolujeme si Vás upozornit, že v případě nedodržení data splatnosti uvedeného na faktuře', 20, 250);
-    doc.text('Vám můžeme účtovat zákonný úrok z prodlení.', 20, 255);
+        // Footer
+        doc.setFontSize(8);
+        doc.text('Dovolujeme si Vás upozornit, že v případě nedodržení data splatnosti uvedeného na faktuře', 20, 250);
+        doc.text('Vám můžeme účtovat zákonný úrok z prodlení.', 20, 255);
 
-    doc.text(`Vytiskl(a): ${document.getElementById("companyName").value}, ${document.getElementById("issueDate").value}`, 20, 285);
-    doc.text('Strana 1/1', 180, 285);
+        doc.text(`Vytiskl(a): ${document.getElementById("companyName").value}, ${document.getElementById("issueDate").value}`, 20, 285);
+        doc.text('Strana 1/1', 180, 285);
 
-    doc.save(`faktura_${document.getElementById("invoiceNumber").value}.pdf`);
-}
+        doc.save(`faktura_${document.getElementById("invoiceNumber").value}.pdf`);
+    }
 </script>
 
 </body>
