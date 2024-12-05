@@ -227,51 +227,77 @@
         `;
         document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
     }
-
+    
     function generateInvoice() {
-        const companyName = document.getElementById("companyName").value;
-        const companyAddress = document.getElementById("companyAddress").value;
-        const ico = document.getElementById("ico").value;
-        const buyerName = document.getElementById("buyerName").value;
-        const buyerAddress = document.getElementById("buyerAddress").value;
-        const buyerIco = document.getElementById("buyerIco").value;
-        const invoiceNumber = document.getElementById("invoiceNumber").value;
-        const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
-        const issueDate = document.getElementById("issueDate").value;
-        const dueDate = document.getElementById("dueDate").value;
-        const bankAccount = document.getElementById("bankAccount").value;
-        const iban = document.getElementById("iban").value;
-        const variableSymbol = document.getElementById("variableSymbol").value;
-        const constantSymbol = document.getElementById("constantSymbol").value;
-        const amount = document.getElementById("amount").value;
-        const description = document.getElementById("description").value;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFont("Arial", "normal", 12);
+    // Use a Unicode-compatible font
+    doc.addFont("Arial", "Arial", "normal");
+    doc.setFont("Arial", "normal");
 
-        // Přidání všech údajů do PDF s formátováním
-        doc.text(`Faktura č. ${invoiceNumber}`, 20, 20);
-        doc.text(`Datum vystavení: ${issueDate}`, 20, 30);
-        doc.text(`Datum splatnosti: ${dueDate}`, 20, 40);
-        doc.text(`Dodavatel: ${companyName}`, 20, 50);
-        doc.text(`Adresa: ${companyAddress}`, 20, 60);
-        doc.text(`IČO: ${ico}`, 20, 70);
-        doc.text(`Odběratel: ${buyerName}`, 20, 80);
-        doc.text(`Adresa: ${buyerAddress}`, 20, 90);
-        doc.text(`IČO: ${buyerIco}`, 20, 100);
-        doc.text(`Email: ${email}`, 20, 110);
-        doc.text(`Telefon: ${phone}`, 20, 120);
-        doc.text(`Číslo účtu: ${bankAccount}`, 20, 130);
-        doc.text(`IBAN: ${iban}`, 20, 140);
-        doc.text(`Variabilní symbol: ${variableSymbol}`, 20, 150);
-        doc.text(`Konstantní symbol: ${constantSymbol}`, 20, 160);
-        doc.text(`Fakturujeme za: ${description}`, 20, 170);
-        doc.text(`Celkem k úhradě: ${amount} Kč`, 20, 180);
+    // Set text encoding to UTF-8
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
 
-        doc.save(`faktura_${invoiceNumber}.pdf`);
-    }
+    // Invoice Header
+    doc.setFontSize(16);
+    doc.text('Faktura', 105, 20, { align: 'center' });
+    doc.setFontSize(10);
+
+    // Dodavatel (Supplier) Details
+    doc.text('Dodavatel', 20, 40);
+    doc.setFontSize(9);
+    doc.text(document.getElementById("companyName").value, 20, 45);
+    doc.text(document.getElementById("companyAddress").value, 20, 50);
+    doc.text(`IČ: ${document.getElementById("ico").value}`, 20, 60);
+    doc.text('Nejsme plátci DPH', 20, 65);
+
+    // Invoice Details
+    doc.setFontSize(10);
+    doc.text(`Číslo faktury: ${document.getElementById("invoiceNumber").value}`, 140, 40);
+    doc.text(`Datum vystavení: ${document.getElementById("issueDate").value}`, 140, 45);
+
+    // Odběratel (Buyer) Details
+    doc.text('Odběratel', 20, 80);
+    doc.setFontSize(9);
+    doc.text(document.getElementById("buyerName").value, 20, 85);
+    doc.text(document.getElementById("buyerAddress").value, 20, 90);
+    doc.text(`IČ: ${document.getElementById("buyerIco").value}`, 20, 95);
+
+    // Kontaktní údaje (Contact Details)
+    doc.text('Kontaktní údaje', 20, 110);
+    doc.text(`E-mail: ${document.getElementById("email").value}`, 20, 115);
+    doc.text(`Telefon: ${document.getElementById("phone").value}`, 20, 120);
+
+    // Invoice Items
+    doc.text('Fakturujeme Vám za dodané zboží či služby:', 20, 135);
+    doc.text(document.getElementById("description").value, 20, 140);
+
+    // Payment Details
+    doc.text(`Datum splatnosti: ${document.getElementById("dueDate").value}`, 20, 160);
+    doc.text(`Variabilní symbol: ${document.getElementById("variableSymbol").value}`, 20, 165);
+    doc.text(`Konstantní symbol: ${document.getElementById("constantSymbol").value}`, 20, 170);
+
+    // Bank Details
+    doc.text('Bankovní účet', 20, 185);
+    doc.text(`Číslo účtu: ${document.getElementById("bankAccount").value}`, 20, 190);
+    doc.text(`IBAN: ${document.getElementById("iban").value}`, 20, 195);
+
+    // Total Amount
+    doc.setFontSize(12);
+    doc.text(`Celkem k úhradě: ${document.getElementById("amount").value} Kč`, 20, 210);
+
+    // Footer
+    doc.setFontSize(8);
+    doc.text('Dovolujeme si Vás upozornit, že v případě nedodržení data splatnosti uvedeného na faktuře', 20, 250);
+    doc.text('Vám můžeme účtovat zákonný úrok z prodlení.', 20, 255);
+
+    doc.text(`Vytiskl(a): ${document.getElementById("companyName").value}, ${document.getElementById("issueDate").value}`, 20, 285);
+    doc.text('Strana 1/1', 180, 285);
+
+    doc.save(`faktura_${document.getElementById("invoiceNumber").value}.pdf`);
+}
 </script>
 
 </body>
