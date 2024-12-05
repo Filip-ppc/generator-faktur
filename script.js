@@ -9,8 +9,6 @@ function updateFaktura() {
     const nazev = form.nazev.value;
     const cena = form.cena.value;
     const mnozstvi = form.mnozstvi.value;
-
-    // Výpočet celkové ceny
     const celkovaCena = cena * mnozstvi;
 
     // Vytvoření HTML kódu faktury
@@ -25,6 +23,9 @@ function updateFaktura() {
 
     // Vložení HTML kódu do divu
     fakturaDiv.innerHTML = fakturaHTML;
+
+    // Aktivujeme tlačítko pro stažení PDF
+    pdfButton.disabled = false;
 }
 
 // Funkce pro vytvoření PDF
