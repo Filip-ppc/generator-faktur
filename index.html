@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dynamická faktura</title>
+    <title>Dynamická faktura z formuláře</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Vytvořit fakturu</h1>
     <form id="fakturaForm">
-        </form>
+        <label for="nazev">Název položky:</label>
+        <input type="text" id="nazev" name="nazev">
+        <label for="cena">Cena za kus:</label>
+        <input type="number" id="cena" name="cena">
+        <label for="mnozstvi">Množství:</label>
+        <input type="number" id="mnozstvi" name="mnozstvi">
+        <button type="submit">Vytvořit fakturu</button>
+    </form>
     <div id="faktura"></div>
+    <button id="pdfButton" disabled>Stáhnout jako PDF</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
