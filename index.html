@@ -1,157 +1,278 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generátor faktury</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f7fc;
-    }
-
-    .container {
-      width: 80%;
-      margin: auto;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #0277BD;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
-    input[type="text"], input[type="number"], input[type="date"], input[type="email"], textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .form-actions {
-      text-align: center;
-    }
-
-    .btn {
-      background-color: #0277BD;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .invoice-preview {
-      margin-top: 30px;
-      border-top: 2px solid #0277BD;
-      padding-top: 20px;
-    }
-
-    .invoice-preview h2 {
-      color: #0277BD;
-      font-size: 24px;
-    }
-
-    .invoice-detail {
-      margin: 15px 0;
-      font-size: 14px;
-    }
-
-    .invoice-detail strong {
-      font-weight: bold;
-    }
-
-    .invoice-header {
-      background-color: #E3F2FD;
-      padding: 20px;
-      margin-bottom: 20px;
-      text-align: center;
-      border-radius: 8px;
-    }
-
-    .invoice-body {
-      font-size: 14px;
-      color: #333;
-    }
-
-    .invoice-footer {
-      margin-top: 30px;
-      font-size: 12px;
-      text-align: center;
-      color: #0277BD;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generátor faktury</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0277BD;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="date"], input[type="email"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .btn {
+            background-color: #0277BD;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .invoice-preview {
+            margin-top: 30px;
+            border-top: 2px solid #0277BD;
+            padding-top: 20px;
+        }
+        .invoice-preview h2 {
+            color: #0277BD;
+            font-size: 24px;
+        }
+        .invoice-detail {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .invoice-detail strong {
+            font-weight: bold;
+        }
+        .invoice-header {
+            background-color: #E3F2FD;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 8px;
+        }
+        .invoice-body {
+            font-size: 14px;
+            color: #333;
+        }
+        .invoice-footer {
+            margin-top: 30px;
+            font-size: 12px;
+            text-align: center;
+            color: #0277BD;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Generátor faktury</h1>
-    <form id="invoiceForm">
-      <div class="form-group">
-        <label for="companyName">Název dodavatele:</label>
-        <input type="text" id="companyName" name="companyName" oninput="updateInvoicePreview()" required>
-      </div>
 
-      <div class="form-actions">
-        <button type="button" class="btn" onclick="generateInvoice()">Stáhnout PDF</button>
-      </div>
+<div class="container">
+    <h1>Generátor faktury</h1>
+
+    <form id="invoiceForm">
+        <div class="form-group">
+            <label for="companyName">Název dodavatele:</label>
+            <input type="text" id="companyName" name="companyName" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="companyAddress">Adresa dodavatele:</label>
+            <textarea id="companyAddress" name="companyAddress" rows="3" oninput="updateInvoicePreview()" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="ico">IČO dodavatele:</label>
+            <input type="text" id="ico" name="ico" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="buyerName">Název odběratele:</label>
+            <input type="text" id="buyerName" name="buyerName" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="buyerAddress">Adresa odběratele:</label>
+            <textarea id="buyerAddress" name="buyerAddress" rows="3" oninput="updateInvoicePreview()" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="buyerIco">IČO odběratele:</label>
+            <input type="text" id="buyerIco" name="buyerIco" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="invoiceNumber">Číslo faktury:</label>
+            <input type="text" id="invoiceNumber" name="invoiceNumber" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email kontaktní osoby:</label>
+            <input type="email" id="email" name="email" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Telefonní číslo:</label>
+            <input type="text" id="phone" name="phone" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="issueDate">Datum vystavení:</label>
+            <input type="date" id="issueDate" name="issueDate" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="dueDate">Datum splatnosti:</label>
+            <input type="date" id="dueDate" name="dueDate" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="bankAccount">Číslo účtu:</label>
+            <input type="text" id="bankAccount" name="bankAccount" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="iban">IBAN:</label>
+            <input type="text" id="iban" name="iban" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="variableSymbol">Variabilní symbol:</label>
+            <input type="text" id="variableSymbol" name="variableSymbol" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="constantSymbol">Konstantní symbol:</label>
+            <input type="text" id="constantSymbol" name="constantSymbol" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Částka k úhradě:</label>
+            <input type="number" id="amount" name="amount" oninput="updateInvoicePreview()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Fakturujeme vám za dodané služby:</label>
+            <textarea id="description" name="description" rows="3" oninput="updateInvoicePreview()" required></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn" onclick="generateInvoice()">Stáhnout PDF</button>
+        </div>
     </form>
 
     <div class="invoice-preview" id="invoicePreview">
-      </div>
-  </div>
+        <!-- Náhled faktury -->
+    </div>
+</div>
 
-  <script>
+<script>
     function updateInvoicePreview() {
-      // Update the invoice preview based on form input values
-      const companyName = document.getElementById("companyName").value;
-      // ... other form field values ...
+        const companyName = document.getElementById("companyName").value;
+        const companyAddress = document.getElementById("companyAddress").value;
+        const ico = document.getElementById("ico").value;
+        const buyerName = document.getElementById("buyerName").value;
+        const buyerAddress = document.getElementById("buyerAddress").value;
+        const buyerIco = document.getElementById("buyerIco").value;
+        const invoiceNumber = document.getElementById("invoiceNumber").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const issueDate = document.getElementById("issueDate").value;
+        const dueDate = document.getElementById("dueDate").value;
+        const bankAccount = document.getElementById("bankAccount").value;
+        const iban = document.getElementById("iban").value;
+        const variableSymbol = document.getElementById("variableSymbol").value;
+        const constantSymbol = document.getElementById("constantSymbol").value;
+        const amount = document.getElementById("amount").value;
+        const description = document.getElementById("description").value;
 
-      // Construct the HTML for the invoice preview
-      const invoicePreviewHTML = `
-        <div class="invoice-header">
-          <h2>Faktura č. ${invoiceNumber}</h2>
-          <p>Datum vystavení: ${issueDate}</p>
-          <p>Datum splatnosti: ${dueDate}</p>
-        </div>
-        <div class="invoice-body">
-          </div>
-        <div class="invoice-footer">
-          <p>Faktura vystavena elektronicky.</p>
-        </div>
-      `;
-
-      document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
+        const invoicePreviewHTML = `
+            <div class="invoice-header">
+                <h2>Faktura č. ${invoiceNumber}</h2>
+                <p>Datum vystavení: ${issueDate}</p>
+                <p>Datum splatnosti: ${dueDate}</p>
+            </div>
+            <div class="invoice-body">
+                <div class="invoice-detail"><strong>Dodavatel:</strong><br>${companyName}<br>${companyAddress}<br>IČO: ${ico}</div>
+                <div class="invoice-detail"><strong>Odběratel:</strong><br>${buyerName}<br>${buyerAddress}<br>IČO: ${buyerIco}</div>
+                <div class="invoice-detail"><strong>Kontaktní údaje:</strong><br>Email: ${email}<br>Telefon: ${phone}</div>
+                <div class="invoice-detail"><strong>Bankovní údaje:</strong><br>Číslo účtu: ${bankAccount}<br>IBAN: ${iban}<br>Variabilní symbol: ${variableSymbol}<br>Konstantní symbol: ${constantSymbol}</div>
+                <div class="invoice-detail"><strong>Fakturujeme vám za dodané služby:</strong><br>${description}</div>
+                <div class="invoice-detail"><strong>Celkem k úhradě:</strong><br>${amount} Kč</div>
+            </div>
+            <div class="invoice-footer">
+                <p>Faktura vystavena elektronicky.</p>
+            </div>
+        `;
+        document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
     }
 
     function generateInvoice() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+        const companyName = document.getElementById("companyName").value;
+        const companyAddress = document.getElementById("companyAddress").value;
+        const ico = document.getElementById("ico").value;
+        const buyerName = document.getElementById("buyerName").value;
+        const buyerAddress = document.getElementById("buyerAddress").value;
+        const buyerIco = document.getElementById("buyerIco").value;
+        const invoiceNumber = document.getElementById("invoiceNumber").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const issueDate = document.getElementById("issueDate").value;
+        const dueDate = document.getElementById("dueDate").value;
+        const bankAccount = document.getElementById("bankAccount").value;
+        const iban = document.getElementById("iban").value;
+        const variableSymbol = document.getElementById("variableSymbol").value;
+        const constantSymbol = document.getElementById("constantSymbol").value;
+        const amount = document.getElementById("amount").value;
+        const description = document.getElementById("description").value;
 
-      // Add PDF content based on form input values
-      doc.text("Faktura", 105, 20, { align: 'center' });
-      // ... other PDF content ...
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFont("Arial", "normal", 12);
 
-      doc.save(`faktura_${document.getElementById("invoiceNumber").value}.pdf`);
+        // Přidání všech údajů do PDF s formátováním
+        doc.text(`Faktura č. ${invoiceNumber}`, 20, 20);
+        doc.text(`Datum vystavení: ${issueDate}`, 20, 30);
+        doc.text(`Datum splatnosti: ${dueDate}`, 20, 40);
+        doc.text(`Dodavatel: ${companyName}`, 20, 50);
+        doc.text(`Adresa: ${companyAddress}`, 20, 60);
+        doc.text(`IČO: ${ico}`, 20, 70);
+        doc.text(`Odběratel: ${buyerName}`, 20, 80);
+        doc.text(`Adresa: ${buyerAddress}`, 20, 90);
+        doc.text(`IČO: ${buyerIco}`, 20, 100);
+        doc.text(`Email: ${email}`, 20, 110);
+        doc.text(`Telefon: ${phone}`, 20, 120);
+        doc.text(`Číslo účtu: ${bankAccount}`, 20, 130);
+        doc.text(`IBAN: ${iban}`, 20, 140);
+        doc.text(`Variabilní symbol: ${variableSymbol}`, 20, 150);
+        doc.text(`Konstantní symbol: ${constantSymbol}`, 20, 160);
+        doc.text(`Fakturujeme za: ${description}`, 20, 170);
+        doc.text(`Celkem k úhradě: ${amount} Kč`, 20, 180);
+
+        doc.save(`faktura_${invoiceNumber}.pdf`);
     }
-  </script>
+</script>
+
 </body>
 </html>
