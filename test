@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktura Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>Generátor faktury</h1>
+    
+    <form id="invoice-form">
+        <label for="ico">IČO:</label><br>
+        <input type="text" id="ico" name="ico" required><br><br>
+
+        <label for="amount">Částka (Kč):</label><br>
+        <input type="number" id="amount" name="amount" required><br><br>
+
+        <label for="item">Název položky:</label><br>
+        <input type="text" id="item" name="item" required><br><br>
+
+        <input type="submit" value="Generovat fakturu">
+    </form>
+
+    <h2>Faktura</h2>
+    <div id="invoice"></div>
+
+    <h3>QR Kód</h3>
+    <div id="qrcode"></div>
+
+    <script>
+        $("#invoice-form").submit(function(event) {
+            event.preventDefault();
+
+            const ico = $("#ico").val();
+            const amount = $("#amount").val();
+            const item = $("#item").val();
+
+            // Generování faktury
+            let invoiceHtml = `
+                <h3>Faktura</h3>
+                <p>IČO: ${ico}</p>
+                <p>Název položky: ${item}</p>
+                <p>Částka: ${amount} Kč</p>
+            `;
+
+            // Vytvoření QR kódu (např. s údaji o faktuře)
+            const qrCodeData = `IČO: ${ico}, Částka: ${amount} Kč`;
+            new QRCode(document.getElementById("qrcode"), qrCodeData);
+
+            $("#invoice").html(invoiceHtml);
+        });
+    </script>
+</body>
+</html>
