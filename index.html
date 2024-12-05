@@ -228,113 +228,115 @@
         document.getElementById("invoicePreview").innerHTML = invoicePreviewHTML;
     }
 
-    function generateInvoice() {
-        const companyName = document.getElementById("companyName").value;
-        const companyAddress = document.getElementById("companyAddress").value;
-        const ico = document.getElementById("ico").value;
-        const buyerName = document.getElementById("buyerName").value;
-        const buyerAddress = document.getElementById("buyerAddress").value;
-        const buyerIco = document.getElementById("buyerIco").value;
-        const invoiceNumber = document.getElementById("invoiceNumber").value;
-        const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
-        const issueDate = document.getElementById("issueDate").value;
-        const dueDate = document.getElementById("dueDate").value;
-        const bankAccount = document.getElementById("bankAccount").value;
-        const iban = document.getElementById("iban").value;
-        const variableSymbol = document.getElementById("variableSymbol").value;
-        const constantSymbol = document.getElementById("constantSymbol").value;
-        const amount = document.getElementById("amount").value;
-        const description = document.getElementById("description").value;
+    function generateInvoicePDF() {
+    // Use jsPDF for browser-based PDF generation
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFont("Arial", "normal text", 12);
+    // Collect data from form fields
+    const invoiceData = {
+        invoiceNumber: document.getElementById('invoiceNumber').value,
+        issueDate: document.getElementById('issueDate').value,
+        dueDate: document.getElementById('dueDate').value,
+        companyName: document.getElementById('companyName').value,
+        companyAddress: document.getElementById('companyAddress').value,
+        ico: document.getElementById('ico').value,
+        buyerName: document.getElementById('buyerName').value,
+        buyerAddress: document.getElementById('buyerAddress').value,
+        buyerIco: document.getElementById('buyerIco').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        bankAccount: document.getElementById('bankAccount').value,
+        iban: document.getElementById('iban').value,
+        variableSymbol: document.getElementById('variableSymbol').value,
+        constantSymbol: document.getElementById('constantSymbol').value,
+        description: document.getElementById('description').value,
+        amount: document.getElementById('amount').value
+    };
 
-        // Přidání všech údajů do PDF s formátováním
-function generateInvoicePDF(invoiceData) {
-    // Check if running in browser
-    if (typeof window !== 'undefined') {
-        // Use browser-compatible PDF generation
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+    // Set font styles
+    doc.setFont('helvetica', 'normal');
+    
+    // Title
+    doc.setFontSize(16);
+    doc.text('FAKTURA', 105, 20, { align: 'center' });
 
-        // Set font styles
-        doc.setFont('helvetica', 'normal');
-        
-        // Title
-        doc.setFontSize(16);
-        doc.text('FAKTURA', 105, 20, { align: 'center' });
+    // Invoice Details
+    doc.setFontSize(10);
+    doc.text(`Číslo faktury: ${invoiceData.invoiceNumber}`, 20, 30);
+    doc.text(`Datum vystavení: ${invoiceData.issueDate}`, 150, 30, { align: 'right' });
+    doc.text(`Datum splatnosti: ${invoiceData.dueDate}`, 150, 37, { align: 'right' });
 
-        // Invoice Details
-        doc.setFontSize(10);
-        doc.text(`Číslo faktury: ${invoiceData.invoiceNumber}`, 20, 30);
-        doc.text(`Datum vystavení: ${invoiceData.issueDate}`, 150, 30, { align: 'right' });
-        doc.text(`Datum splatnosti: ${invoiceData.dueDate}`, 150, 37, { align: 'right' });
+    // Supplier Details
+    doc.setFontSize(12);
+    doc.text('Dodavatel:', 20, 50);
+    doc.setFontSize(10);
+    doc.text(`${invoiceData.companyName}`, 20, 57);
+    doc.text(`Adresa: ${invoiceData.companyAddress}`, 20, 64);
+    doc.text(`IČ: ${invoiceData.ico}`, 20, 71);
 
-        // Supplier Details
-        doc.setFontSize(12);
-        doc.text('Dodavatel:', 20, 50);
-        doc.setFontSize(10);
-        doc.text(`${invoiceData.companyName}`, 20, 57);
-        doc.text(`Adresa: ${invoiceData.companyAddress}`, 20, 64);
-        doc.text(`IČ: ${invoiceData.ico}`, 20, 71);
+    // Buyer Details
+    doc.setFontSize(12);
+    doc.text('Odběratel:', 20, 85);
+    doc.setFontSize(10);
+    doc.text(`${invoiceData.buyerName}`, 20, 92);
+    doc.text(`Adresa: ${invoiceData.buyerAddress}`, 20, 99);
+    doc.text(`IČ: ${invoiceData.buyerIco}`, 20, 106);
 
-        // Buyer Details
-        doc.setFontSize(12);
-        doc.text('Odběratel:', 20, 85);
-        doc.setFontSize(10);
-        doc.text(`${invoiceData.buyerName}`, 20, 92);
-        doc.text(`Adresa: ${invoiceData.buyerAddress}`, 20, 99);
-        doc.text(`IČ: ${invoiceData.buyerIco}`, 20, 106);
+    // Contact Information
+    doc.setFontSize(12);
+    doc.text('Kontaktní údaje:', 20, 120);
+    doc.setFontSize(10);
+    doc.text(`Email: ${invoiceData.email}`, 20, 127);
+    doc.text(`Telefon: ${invoiceData.phone}`, 20, 134);
 
-        // Contact Information
-        doc.setFontSize(12);
-        doc.text('Kontaktní údaje:', 20, 120);
-        doc.setFontSize(10);
-        doc.text(`Email: ${invoiceData.email}`, 20, 127);
-        doc.text(`Telefon: ${invoiceData.phone}`, 20, 134);
+    // Payment Details
+    doc.setFontSize(12);
+    doc.text('Platební údaje:', 20, 148);
+    doc.setFontSize(10);
+    doc.text(`Číslo účtu: ${invoiceData.bankAccount}`, 20, 155);
+    doc.text(`IBAN: ${invoiceData.iban}`, 20, 162);
 
-        // Payment Details
-        doc.setFontSize(12);
-        doc.text('Platební údaje:', 20, 148);
-        doc.setFontSize(10);
-        doc.text(`Číslo účtu: ${invoiceData.bankAccount}`, 20, 155);
-        doc.text(`IBAN: ${invoiceData.iban}`, 20, 162);
+    // Invoice Details
+    doc.setFontSize(12);
+    doc.text('Detaily faktury:', 20, 176);
+    doc.setFontSize(10);
+    doc.text(`Variabilní symbol: ${invoiceData.variableSymbol}`, 20, 183);
+    doc.text(`Konstantní symbol: ${invoiceData.constantSymbol}`, 20, 190);
+    doc.text(`Popis: ${invoiceData.description}`, 20, 197);
 
-        // Invoice Details
-        doc.setFontSize(12);
-        doc.text('Detaily faktury:', 20, 176);
-        doc.setFontSize(10);
-        doc.text(`Variabilní symbol: ${invoiceData.variableSymbol}`, 20, 183);
-        doc.text(`Konstantní symbol: ${invoiceData.constantSymbol}`, 20, 190);
-        doc.text(`Popis: ${invoiceData.description}`, 20, 197);
+    // Total Amount
+    doc.setFontSize(12);
+    doc.text(`Celkem k úhradě: ${invoiceData.amount} Kč`, 150, 211, { align: 'right' });
 
-        // Total Amount
-        doc.setFontSize(12);
-        doc.text(`Celkem k úhradě: ${invoiceData.amount} Kč`, 150, 211, { align: 'right' });
+    // Convert PDF to Blob
+    const pdfBlob = doc.output('blob');
 
-        // Trigger Download
-        doc.save(`Faktura_${invoiceData.invoiceNumber}.pdf`);
-    } 
-    // Node.js environment
-    else if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-        const PDFDocument = require('pdfkit');
-        const fs = require('fs');
+    // Create download link
+    const pdfUrl = window.URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = pdfUrl;
+    a.download = `Faktura_${invoiceData.invoiceNumber}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(pdfUrl);
+}
 
-        const doc = new PDFDocument({ size: 'A4', margin: 50 });
-        const outputStream = fs.createWriteStream(`Faktura_${invoiceData.invoiceNumber}.pdf`);
-        doc.pipe(outputStream);
-
-        doc.end();
-        console.log(`Invoice PDF saved as Faktura_${invoiceData.invoiceNumber}.pdf`);
-    } 
-    else {
-        console.error('Unsupported environment for PDF generation');
+// Ensure jsPDF is loaded
+function checkJsPDF() {
+    if (typeof jspdf === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.onload = () => {
+            console.log('jsPDF loaded successfully');
+        };
+        document.head.appendChild(script);
     }
 }
-    }
-</script>
+
+// Call checkJsPDF when the page loads
+window.onload = checkJsPDF;</script>
 
 </body>
 </html>
