@@ -1,0 +1,6 @@
+/* Zde budeš definovat styly pro formulář a fakturu */
+.faktura-polozka {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
