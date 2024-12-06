@@ -197,10 +197,10 @@
 </div>
 
 <script>
-   function generateInvoice() {
+function generateInvoice() {
     const { jsPDF } = window.jspdf;
 
-    // Gather all form values
+    // Gather form values
     const companyName = document.getElementById("companyName").value;
     const companyAddress = document.getElementById("companyAddress").value;
     const ico = document.getElementById("ico").value;
@@ -208,8 +208,6 @@
     const buyerAddress = document.getElementById("buyerAddress").value;
     const buyerIco = document.getElementById("buyerIco").value;
     const invoiceNumber = document.getElementById("invoiceNumber").value;
-    const email = document.getElementById("email").value;
-    const phone = document.getElementById("phone").value;
     const issueDate = document.getElementById("issueDate").value;
     const dueDate = document.getElementById("dueDate").value;
     const bankAccount = document.getElementById("bankAccount").value;
@@ -219,123 +217,59 @@
     const amount = document.getElementById("amount").value;
     const description = document.getElementById("description").value;
 
-    // Update preview (keep existing preview code)
-    const invoicePreview = document.getElementById("invoicePreview");
-    invoicePreview.innerHTML = `
-        <div class="invoice-header">
-            <h2>Faktura č. ${invoiceNumber}</h2>
-            <p>${issueDate} - ${dueDate}</p>
-        </div>
-        <div class="invoice-body">
-            <div class="invoice-detail">
-                <strong>Dodavatel:</strong><br>
-                ${companyName}<br>
-                ${companyAddress}<br>
-                IČO: ${ico}
-            </div>
-            <div class="invoice-detail">
-                <strong>Odběratel:</strong><br>
-                ${buyerName}<br>
-                ${buyerAddress}<br>
-                IČO: ${buyerIco}
-            </div>
-            <div class="invoice-detail">
-                <strong>Kontaktní údaje:</strong><br>
-                Email: ${email}<br>
-                Telefon: ${phone}
-            </div>
-            <div class="invoice-detail">
-                <strong>Bankovní údaje:</strong><br>
-                Číslo účtu: ${bankAccount}<br>
-                IBAN: ${iban}<br>
-                Variabilní symbol: ${variableSymbol}<br>
-                Konstantní symbol: ${constantSymbol}
-            </div>
-            <div class="invoice-detail">
-                <strong>Fakturujeme vám za dodané služby:</strong><br>
-                ${description}
-            </div>
-            <div class="invoice-detail">
-                <strong>Celkem k úhradě:</strong><br>
-                ${amount} Kč
-            </div>
-        </div>
-        <div class="invoice-footer">
-            <p>Faktura vystavena elektronicky.</p>
-        </div>
-    `;
-
-    // Create PDF with more detailed formatting
     const doc = new jsPDF();
+    doc.setFont("helvetica");
     
-    // Set up fonts and colors
-    doc.setFont("helvetica", "normal");
+    // Header
+    doc.setFontSize(14);
+    doc.text("FAKTURA - DAŇOVÝ DOKLAD č.: " + invoiceNumber, 15, 20);
+    
+    // Supplier Details
     doc.setFontSize(10);
+    doc.text("Dodavatel:", 15, 35);
+    doc.text(companyName, 15, 40);
+    doc.text(companyAddress, 15, 45);
+    doc.text("IČO: " + ico, 15, 50);
     
-    // Invoice Header
-    doc.setFillColor(227, 242, 253); // Light blue background
-    doc.rect(10, 10, 190, 20, 'F');
-    doc.setTextColor(2, 119, 189); // Dark blue text
-    doc.setFontSize(16);
-    doc.text(`FAKTURA - DAŇOVÝ DOKLAD č.: ${invoiceNumber}`, 105, 20, { align: 'center' });
-    
-    // Reset text color and font size
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
-    // Supplier and Buyer Details
-    doc.text("Dodavatel:", 15, 40);
-    doc.text(companyName, 15, 45);
-    doc.text(companyAddress, 15, 50);
-    doc.text(`IČO: ${ico}`, 15, 55);
-    
-    doc.text("Odběratel:", 105, 40);
-    doc.text(buyerName, 105, 45);
-    doc.text(buyerAddress, 105, 50);
-    doc.text(`IČO: ${buyerIco}`, 105, 55);
+    // Buyer Details
+    doc.text("Odběratel:", 105, 35);
+    doc.text(buyerName, 105, 40);
+    doc.text(buyerAddress, 105, 45);
+    doc.text("IČO: " + buyerIco, 105, 50);
     
     // Payment Details
-    doc.text(`Datum vystavení: ${formatDate(issueDate)}`, 15, 70);
-    doc.text(`Datum splatnosti: ${formatDate(dueDate)}`, 15, 75);
-    doc.text(`Variabilní symbol: ${variableSymbol}`, 15, 80);
-    doc.text(`Konstantní symbol: ${constantSymbol}`, 15, 85);
-    doc.text(`Číslo účtu: ${bankAccount}`, 15, 90);
-    doc.text(`IBAN: ${iban}`, 15, 95);
+    const formatCzechDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('cs-CZ', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+    
+    doc.text("Způsob úhrady: Bankovní převod", 15, 65);
+    doc.text("Datum vystavení: " + formatCzechDate(issueDate), 15, 70);
+    doc.text("Datum splatnosti: " + formatCzechDate(dueDate), 15, 75);
+    doc.text("Variabilní symbol: " + variableSymbol, 15, 80);
+    doc.text("Konstantní symbol: " + constantSymbol, 15, 85);
+    doc.text("Banka: Air Bank", 15, 90);
+    doc.text("Číslo účtu / kód: " + bankAccount, 15, 95);
     
     // Invoice Items
-    doc.setFillColor(200, 220, 255); // Light header background
-    doc.rect(15, 110, 180, 10, 'F');
-    doc.text("Položka", 20, 116);
-    doc.text("Počet", 120, 116);
-    doc.text("Cena za m.j.", 140, 116);
-    doc.text("Cena celkem", 170, 116);
+    doc.text("Název", 15, 110);
+    doc.text("Počet m.j.", 100, 110);
+    doc.text("Cena za m.j.", 140, 110);
+    doc.text("Cena celkem", 170, 110);
     
-    // Add description as an invoice item
-    doc.text(description, 20, 126);
-    doc.text("1", 120, 126);
-    doc.text(`${amount} Kč`, 140, 126);
-    doc.text(`${amount} Kč`, 170, 126);
+    doc.text(description, 15, 120);
+    doc.text("1", 100, 120);
+    doc.text(amount + " Kč", 140, 120);
+    doc.text(amount + " Kč", 170, 120);
     
     // Total Amount
-    doc.setFontSize(12);
-    doc.text(`Částka k úhradě: ${amount} Kč`, 15, 150);
-    
-    // Footer
-    doc.setFontSize(8);
-    doc.text("Faktura vystavena elektronicky", 105, 280, { align: 'center' });
-    
-    // Save the PDF
-    doc.save(`faktura_${invoiceNumber}.pdf`);
-}
+    doc.text("Částka k úhradě: " + amount + " Kč", 15, 140);
 
-// Helper function to format date in DD.MM.YYYY format
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('cs-CZ', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
+    doc.save(`faktura_${invoiceNumber}.pdf`);
 }
 </script>
 
